@@ -46,75 +46,100 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+  
+  /* Shadow kustom bertema cream */
+  --shadow-cream: 0 4px 16px -2px rgba(210, 185, 155, 0.35);
+  --shadow-cream-lg: 0 10px 25px -4px rgba(200, 170, 140, 0.45);
 }
 
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
+ /* Background Soft Warm Cream */
+  --background: oklch(0.98 0.015 80);
+  --foreground: oklch(0.20 0.040 50);
+
+  --card: oklch(0.995 0.010 80);
+  --card-foreground: oklch(0.20 0.040 50);
+  --popover: oklch(0.995 0.010 80);
+  --popover-foreground: oklch(0.20 0.040 50);
+
+  /* Primary Button (Emas/Cokelat Gelap untuk Light Mode supaya kontras & terbaca) */
+  --primary: oklch(0.48 0.110 55);           /* Warm Amber/Bronze Gelap */
+  --primary-foreground: oklch(0.98 0.010 80); /* Teks krim terang di dalam butang */
+
+  /* Secondary & Hover States */
+  --secondary: oklch(0.93 0.025 78);
+  --secondary-foreground: oklch(0.20 0.040 50);
+  --muted: oklch(0.93 0.025 78);
+  --muted-foreground: oklch(0.42 0.045 55);  /* Warna teks sekunder dilaraskan lebih gelap */
+  --accent: oklch(0.90 0.035 76);
+  --accent-foreground: oklch(0.20 0.040 50);
+
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
+  --border: oklch(0.84 0.035 78);           /* Garis border ditegaskan sedikit supaya bekas kelihatan */
+  --input: oklch(0.84 0.035 78);
+  --ring: oklch(0.48 0.110 55);
+
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);
   --chart-4: oklch(0.371 0 0);
   --chart-5: oklch(0.269 0 0);
   --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+
+  --sidebar: oklch(0.96 0.020 80);
+  --sidebar-foreground: oklch(0.20 0.040 50);
+  --sidebar-primary: oklch(0.48 0.110 55);
+  --sidebar-primary-foreground: oklch(0.98 0.010 80);
+  --sidebar-accent: oklch(0.93 0.025 78);
+  --sidebar-accent-foreground: oklch(0.20 0.040 50);
+  --sidebar-border: oklch(0.84 0.035 78);
+  --sidebar-ring: oklch(0.48 0.110 55);
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
+  /* Dark Charcoal Sangat Dalam & Clean (Tidak Kusam) */
+  --background: #141312;                  /* Hitam hangat sangat dalam */
+  --foreground: #F3ECE2;                  /* Teks cream terang bersih */
+  
+  --card: #1D1B19;                        /* Card sedikit lebih terang dari bg */
+  --card-foreground: #F3ECE2;
+  --popover: #1D1B19;
+  --popover-foreground: #F3ECE2;
+  
+  /* Tombol Cream Gold Hangat & Terang */
+  --primary: #E6C594;                     /* Warm Golden Cream - Sangat menyala di dark mode */
+  --primary-foreground: #1A1714;          /* Teks gelap kontras di dalam tombol */
+  
+  /* Secondary & Muted */
+  --secondary: #272421;                   /* Tombol "Contact Us" / outline background */
+  --secondary-foreground: #E0D5C7;
+  --muted: #272421;
+  --muted-foreground: #A19588;             /* Teks subtitle yang lembut */
+  --accent: #2F2B27;
+  --accent-foreground: #F3ECE2;
+  
   --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --border: rgba(243, 236, 226, 0.12);    /* Border tipis transparan */
+  --input: rgba(243, 236, 226, 0.15);
+  --ring: #E6C594;                        /* Outline fokus warna cream gold */
+  
+  --chart-1: #E6C594;
+  --chart-2: #D4A373;
+  --chart-3: #B87034;
+  --chart-4: #9F6335;
+  --chart-5: #84542F;
+  
+  --sidebar: #141312;
+  --sidebar-foreground: #F3ECE2;
+  --sidebar-primary: #E6C594;
+  --sidebar-primary-foreground: #1A1714;
+  --sidebar-accent: #272421;
+  --sidebar-accent-foreground: #F3ECE2;
+  --sidebar-border: rgba(243, 236, 226, 0.12);
+  --sidebar-ring: #E6C594;
+
+  --shadow-cream: 0 4px 20px -2px rgba(230, 197, 148, 0.25);
+  --shadow-cream-lg: 0 8px 30px -4px rgba(230, 197, 148, 0.35);
 }
 
 @layer base {
@@ -122,9 +147,80 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    /* Menambahkan transisi halus saat berganti Light/Dark mode */
+    @apply bg-background text-foreground transition-colors duration-300;
   }
   html {
-    @apply font-sans;
+    @apply font-sans scroll-smooth;
   }
+}
+
+@layer utilities {
+  /* Utility shadow cream agar mudah dipanggil */
+  .shadow-cream {
+    box-shadow: var(--shadow-cream);
+  }
+  .shadow-cream-lg {
+    box-shadow: var(--shadow-cream-lg);
+  }
+
+  .bg-grid {
+    background-image:
+      linear-gradient(to right, color-mix(in oklch, var(--foreground) 7%, transparent) 1px, transparent 1px),
+      linear-gradient(to bottom, color-mix(in oklch, var(--foreground) 7%, transparent) 1px, transparent 1px);
+    background-size: 44px 44px;
+  }
+
+  .bg-radial-fade {
+    mask-image: radial-gradient(ellipse 65% 55% at 50% 0%, #000 60%, transparent 100%);
+    -webkit-mask-image: radial-gradient(ellipse 65% 55% at 50% 0%, #000 60%, transparent 100%);
+  }
+
+  .text-gradient {
+    background-image: linear-gradient(to bottom right, var(--foreground), color-mix(in oklch, var(--foreground) 45%, transparent));
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    /* Menambahkan padding vertikal & display block agar ekor huruf 'g'/'y' tidak terpotong */
+    display: inline-block;
+    padding-bottom: 0.15em;
+  }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-fade-up {
+  animation: fade-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes glow-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.animate-glow-spin {
+  animation: glow-spin 4s linear infinite;
+}
+
+@keyframes blob {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(20px, -30px) scale(1.1);
+  }
+  66% {
+    transform: translate(-15px, 15px) scale(0.95);
+  }
+}
+.animate-blob {
+  animation: blob 12s ease-in-out infinite;
 }

@@ -1,7 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Search, SearchX, Loader2 } from "lucide-react";
+
 import UserCard from "@/components/UserCard";
+import { Input } from "@/components/ui/input";
 
 export default function UsersPage() {
   const [users, setUsers] = useState([]);
@@ -33,25 +36,16 @@ export default function UsersPage() {
       });
   }, []);
 
-  // Loading handling
-  if (loading) {
-    return (
-      <main className="flex min-h-screen items-center justify-center bg-gray-100">
-        <p className="text-gray-600">Loading users...</p>
-      </main>
-    );
-  }
-
-  // Error handling
+  // Error handling visual
   if (error) {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-gray-100">
-        <div className="rounded-xl border border-red-200 bg-red-50 p-6 text-center">
-          <h2 className="font-semibold text-red-700">
+      <main className="flex min-h-[70vh] items-center justify-center px-6">
+        <div className="rounded-2xl border border-destructive/30 bg-destructive/10 p-6 text-center backdrop-blur-md">
+          <h2 className="font-semibold text-destructive">
             Something went wrong
           </h2>
 
-          <p className="mt-2 text-sm text-red-600">
+          <p className="mt-2 text-sm text-destructive/80">
             {error}
           </p>
         </div>
@@ -59,24 +53,60 @@ export default function UsersPage() {
     );
   }
 
+  // Loading skeleton visual
+  if (loading) {
+    return (
+      <section className="relative">
+        <div className="bg-grid bg-radial-fade absolute inset-0 -z-10" />
+        <div className="mx-auto max-w-6xl px-6 py-20">
+          <div className="max-w-2xl space-y-3">
+            <div className="h-4 w-20 animate-pulse rounded-full bg-primary/20" />
+            <div className="h-10 w-64 animate-pulse rounded-xl bg-muted" />
+            <div className="h-4 w-80 animate-pulse rounded-lg bg-muted/60" />
+          </div>
+          <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {[...Array(6)].map((_, i) => (
+              <div key={i} className="h-48 animate-pulse rounded-2xl border border-white/10 bg-card/40" />
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   return (
-    <main className="min-h-screen bg-gray-100 p-8">
-      <div className="mx-auto max-w-6xl">
-        <h1 className="mb-6 text-3xl font-bold">
-          Users Directory
-        </h1>
+    <section className="relative">
+      <div className="bg-grid bg-radial-fade absolute inset-0 -z-10" />
 
-        {/* Search */}
-        <input
-          type="text"
-          placeholder="Search users..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="mb-6 w-full rounded-lg border bg-white px-4 py-2"
-        />
+      <div className="mx-auto max-w-6xl px-6 py-20">
+        <div className="max-w-2xl">
+          <p className="text-sm font-semibold tracking-wide text-primary uppercase">
+            Directory
+          </p>
 
-        {/* User Cards */}
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <h1 className="mt-2 text-4xl font-bold tracking-tight md:text-5xl">
+            User Directory
+          </h1>
+
+          <p className="mt-4 text-muted-foreground">
+            Browse and search through registered users.
+          </p>
+        </div>
+
+        {/* Search Input dengan Ikon */}
+        <div className="relative mt-10 max-w-sm">
+          <Search className="absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+          <Input
+            type="text"
+            placeholder="Search users..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="h-11 rounded-full border-white/10 bg-background/50 pl-10 pr-4 outline-none focus-visible:ring-2 focus-visible:ring-primary"
+          />
+        </div>
+
+        {/* User Cards Grid */}
+        <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {filteredUsers.length > 0 ? (
             filteredUsers.map((user) => (
               <UserCard
@@ -85,12 +115,14 @@ export default function UsersPage() {
               />
             ))
           ) : (
-            <p className="text-gray-500">
-              User tidak ditemukan.
-            </p>
+            <div className="col-span-full flex flex-col items-center justify-center rounded-2xl border border-dashed border-white/10 bg-card/30 py-16 text-center text-muted-foreground backdrop-blur-sm">
+              <SearchX className="size-10 text-primary/60 mb-2" />
+              <p className="text-base font-medium text-foreground">User tidak ditemukan.</p>
+              <p className="text-sm text-muted-foreground">Coba gunakan kata kunci pencarian lain.</p>
+            </div>
           )}
         </div>
       </div>
-    </main>
+    </section>
   );
 }

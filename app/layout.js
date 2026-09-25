@@ -1,10 +1,26 @@
-import { Poppins } from "next/font/google";
 import "./globals.css";
 
-const poppins = Poppins({
-  variable: "--font-poppins",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+import localFont from "next/font/local";
+import { ThemeToogle } from "@/components/ThemeToogle";
+
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+import { UserProvider } from "@/context/UserContext";
+import { ThemeProvider } from "@/components/ThemeProvider";
+
+const fontSans = localFont({
+  src: [
+    {
+      path: "./fonts/PlusJakartaSans-Variable.woff2",
+      style: "normal",
+    },
+    {
+      path: "./fonts/PlusJakartaSans-Italic-Variable.woff2",
+      style: "italic",
+    },
+  ],
+  variable: "--font-sans",
+  display: "swap",
 });
 
 export const metadata = {
@@ -14,11 +30,29 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html
+   <html
       lang="en"
-      className={`${poppins.className} h-full antialiased`}
+      className={`${fontSans.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-screen flex flex-col bg-background text-foreground">
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <UserProvider>
+            <Navbar />
+
+            <main className="flex-1">
+              {children}
+            </main>
+
+            <Footer />
+          </UserProvider>
+        </ThemeProvider>
+      </body>
     </html>
   );
 }
