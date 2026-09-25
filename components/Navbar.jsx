@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useUser } from "@/context/UserContext";
-import ThemeToggle from "@/components/ThemeToogle"; // <--- Pakai kurung kurawal {}
+import ThemeToggle from "@/components/ThemeToogle";
 
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
@@ -18,7 +18,7 @@ const links = [
 
 export default function Navbar() {
   const pathname = usePathname();
-  const { name, submitted } = useUser();
+  const { name, submitted, favorites } = useUser();
 
   return (
     <header className="sticky top-4 z-50 mx-auto w-full max-w-4xl px-4">
@@ -43,17 +43,30 @@ export default function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
-               className={cn(
-                "rounded-full px-3.5 py-1.5 text-sm font-medium transition-all duration-200 hover:text-foreground",
-                isActive 
-                  ? "bg-primary/10 font-semibold text-primary ring-1 ring-primary/30" 
-                  : "text-muted-foreground"
-              )}
+                className={cn(
+                  "rounded-full px-3.5 py-1.5 text-sm font-medium transition-all duration-200 hover:text-foreground",
+                  isActive
+                    ? "bg-primary/10 font-semibold text-primary ring-1 ring-primary/30"
+                    : "text-muted-foreground"
+                )}
               >
                 {link.label}
               </Link>
             );
           })}
+
+          {/* Link Favorite (Counter) */}
+          <Link
+            href="/favorites"
+            className={cn(
+              "rounded-full px-3.5 py-1.5 text-sm font-medium transition-all duration-200 hover:text-foreground",
+              pathname === "/favorites"
+                ? "bg-primary/10 font-semibold text-primary ring-1 ring-primary/30"
+                : "text-muted-foreground"
+            )}
+          >
+            Favorite ({favorites.length})
+          </Link>
         </div>
 
         {/* User Greeting, Theme Toggle & CTA */}
@@ -64,13 +77,12 @@ export default function Navbar() {
             </span>
           )}
 
-          {/* Pemanggilan Komponen ThemeToggle */}
           <ThemeToggle />
 
           <Link
             href="/contact"
             className={cn(
-              buttonVariants({ size: "default" }), 
+              buttonVariants({ size: "default" }),
               "rounded-full font-semibold shadow-sm transition-all hover:shadow-md hover:shadow-primary/20"
             )}
           >

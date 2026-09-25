@@ -66,7 +66,7 @@ export default function UsersPage() {
           </div>
           <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {[...Array(6)].map((_, i) => (
-              <div key={i} className="h-48 animate-pulse rounded-2xl border border-white/10 bg-card/40" />
+              <div key={i} className="h-48 animate-pulse rounded-2xl border border-border/60 bg-card/40" />
             ))}
           </div>
         </div>
@@ -95,13 +95,13 @@ export default function UsersPage() {
 
         {/* Search Input dengan Ikon */}
         <div className="relative mt-10 max-w-sm">
-          <Search className="absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+          <Search className="absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground z-10" />
           <Input
             type="text"
             placeholder="Search users..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="h-11 rounded-full border-white/10 bg-background/50 pl-10 pr-4 outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            className="h-11 rounded-full border-border/80 bg-card/80 pl-10 pr-4 text-foreground placeholder:text-muted-foreground backdrop-blur-md shadow-sm transition-all hover:border-primary/50 focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/20"
           />
         </div>
 
@@ -115,7 +115,7 @@ export default function UsersPage() {
               />
             ))
           ) : (
-            <div className="col-span-full flex flex-col items-center justify-center rounded-2xl border border-dashed border-white/10 bg-card/30 py-16 text-center text-muted-foreground backdrop-blur-sm">
+            <div className="col-span-full flex flex-col items-center justify-center rounded-2xl border border-dashed border-border bg-card/30 py-16 text-center text-muted-foreground backdrop-blur-sm">
               <SearchX className="size-10 text-primary/60 mb-2" />
               <p className="text-base font-medium text-foreground">User tidak ditemukan.</p>
               <p className="text-sm text-muted-foreground">Coba gunakan kata kunci pencarian lain.</p>

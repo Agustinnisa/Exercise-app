@@ -10,15 +10,32 @@ export function UserProvider({ children }) {
   const [message, setMessage] = useState("");
   const [submitted, setSubmitted] = useState(false);
 
+  // State untuk menyimpan daftar user favorit
+  const [favorites, setFavorites] = useState([]);
+
+  // Fungsi toggle untuk menambah / menghapus favorite
+  const toggleFavorite = (user) => {
+    setFavorites((prev) => {
+      const isExist = prev.some((fav) => fav.id === user.id);
+      if (isExist) {
+        return prev.filter((fav) => fav.id !== user.id);
+      } else {
+        return [...prev, user];
+      }
+    });
+  };
+
   const value = {
     name,
     email,
     message,
     submitted,
+    favorites,
     setName,
     setEmail,
     setMessage,
     setSubmitted,
+    toggleFavorite,
   };
 
   return (
