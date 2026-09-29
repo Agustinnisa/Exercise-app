@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useUser } from "@/context/UserContext";
+import { useFavorite } from "@/context/FavoriteContext"; // ✅ Pakai FavoriteContext
 import ThemeToggle from "@/components/ThemeToogle";
 
 import { cn } from "@/lib/utils";
@@ -18,7 +18,7 @@ const links = [
 
 export default function Navbar() {
   const pathname = usePathname();
-  const { name, submitted, favorites } = useUser();
+  const { favorites } = useFavorite(); // ✅ Ambil array favorites dari API Context
 
   return (
     <header className="sticky top-4 z-50 mx-auto w-full max-w-4xl px-4">
@@ -69,14 +69,8 @@ export default function Navbar() {
           </Link>
         </div>
 
-        {/* User Greeting, Theme Toggle & CTA */}
+        {/* Theme Toggle & CTA */}
         <div className="flex items-center gap-3">
-          {submitted && (
-            <span className="hidden text-sm font-medium text-muted-foreground md:inline-block">
-              Hi, <span className="text-primary font-semibold">{name}</span> 👋
-            </span>
-          )}
-
           <ThemeToggle />
 
           <Link

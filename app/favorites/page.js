@@ -1,10 +1,12 @@
 "use client";
 
-import { useUser } from "@/context/UserContext";
+// 💡 Perbaiki import: Gunakan useFavorite dari FavoriteContext
+import { useFavorite } from "@/context/FavoriteContext";
 import UserCard from "@/components/UserCard";
 
 export default function FavoritesPage() {
-  const { favorites } = useUser();
+  // 💡 Panggil useFavorite() alih-alih useUser()
+  const { favorites } = useFavorite();
 
   return (
     <section className="relative">
@@ -26,7 +28,7 @@ export default function FavoritesPage() {
 
         {/* List Card User Favorit */}
         <div className="mt-12">
-          {favorites.length === 0 ? (
+          {!favorites || favorites.length === 0 ? (
             <div className="rounded-2xl border border-border/60 bg-card/40 p-12 text-center backdrop-blur-sm">
               <p className="text-lg font-medium text-muted-foreground">
                 Belum ada user yang ditambahkan ke favorit.

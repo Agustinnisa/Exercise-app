@@ -2,7 +2,8 @@
 
 import { Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useUser } from "@/context/UserContext";
+import { useFavorite } from "@/context/FavoriteContext";
+import Link from "next/link";
 
 import {
   Card,
@@ -12,10 +13,17 @@ import {
 } from "@/components/ui/card";
 
 export default function UserCard({ user }) {
-  const { favorites, toggleFavorite } = useUser();
+  const { favorites, addFavorite, removeFavorite, isFavorite } = useFavorite();
 
-  // Cek apakah user sudah ada di daftar favorit
-  const isFavorite = favorites.some((fav) => fav.id === user.id);
+  const favorited = isFavorite(user.id);
+
+  const handleFavoriteClick = () => {
+    if (favorited) {
+      removeFavorite(user.id);
+    } else {
+      addFavorite(user);
+    }
+  };
 
   const initials = user.name
     .split(" ")
@@ -28,7 +36,6 @@ export default function UserCard({ user }) {
     <Card className="group relative overflow-hidden border border-border/60 bg-card/60 backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-xl hover:shadow-primary/10">
       <CardHeader className="pb-3">
         <div className="flex items-center gap-3.5">
-          {/* Avatar Inisial */}
           <div className="flex size-11 shrink-0 items-center justify-center rounded-full bg-primary/10 text-sm font-bold text-primary ring-1 ring-primary/30 transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
             {initials}
           </div>
@@ -48,33 +55,31 @@ export default function UserCard({ user }) {
           {user.company?.name || "Company"}
         </p>
 
-        {/* Action Buttons */}
         <div className="mt-5 flex items-center gap-2">
-          {/* Tombol View Profile (Warna sama persis dengan Favourite saat aktif) */}
-          <Button
-            className="flex-1 rounded-full bg-primary text-primary-foreground font-semibold shadow-sm transition-all hover:opacity-90 hover:shadow-md hover:shadow-primary/20"
-          >
-            View Profile
-          </Button>
+          <Link href={`/users/${user.id}`} className="flex-1">
+            <Button className="w-full rounded-full bg-primary text-primary-foreground font-semibold shadow-sm transition-all hover:opacity-90 hover:shadow-md hover:shadow-primary/20">
+              View Profile
+            </Button>
+          </Link>
 
-          {/* Tombol Add Favourite / Favourite */}
+          {/* Pasang handleFavoriteClick pada event onClick */}
           <Button
-            onClick={() => toggleFavorite(user)}
-            variant={isFavorite ? "default" : "outline"}
+            onClick={handleFavoriteClick}
+            variant={favorited ? "default" : "outline"}
             className={`rounded-full font-semibold transition-all ${
-              isFavorite
+              favorited
                 ? "bg-primary text-primary-foreground border-primary hover:opacity-90 shadow-md shadow-primary/20"
                 : "border-border/80 bg-background/50 hover:bg-accent hover:text-foreground"
             }`}
           >
             <Heart
               className={`mr-1.5 size-4 transition-transform active:scale-125 ${
-                isFavorite
+                favorited
                   ? "fill-current text-primary-foreground"
                   : "text-muted-foreground"
               }`}
             />
-            {isFavorite ? "Favourite" : "Add Favourite"}
+            {favorited ? "Favourite" : "Add Favourite"}
           </Button>
         </div>
       </CardContent>

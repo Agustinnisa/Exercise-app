@@ -1,11 +1,10 @@
 import "./globals.css";
 
 import localFont from "next/font/local";
-import { ThemeToogle } from "@/components/ThemeToogle";
-
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { UserProvider } from "@/context/UserContext";
+import { FavoriteProvider } from "@/context/FavoriteContext";
+import { UserProvider } from "@/context/UserContext"; // 👈 Tambahkan ini jika ada UserContext
 import { ThemeProvider } from "@/components/ThemeProvider";
 
 const fontSans = localFont({
@@ -30,26 +29,29 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-   <html
+    <html
       lang="en"
       className={`${fontSans.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <body className="min-h-screen flex flex-col bg-background text-foreground">
+      <body className="min-h-screen flex flex-col bg-background text-foreground" suppressHydrationWarning>
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
           enableSystem
           disableTransitionOnChange
         >
+          {/* Bungkus dengan kedua provider */}
           <UserProvider>
-            <Navbar />
+            <FavoriteProvider>
+              <Navbar />
 
-            <main className="flex-1">
-              {children}
-            </main>
+              <main className="flex-1">
+                {children}
+              </main>
 
-            <Footer />
+              <Footer />
+            </FavoriteProvider>
           </UserProvider>
         </ThemeProvider>
       </body>
