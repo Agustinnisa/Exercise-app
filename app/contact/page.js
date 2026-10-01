@@ -5,6 +5,7 @@ import { useUser } from "@/context/UserContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
+import { submitContactForm } from "./action";
 
 const contactInfo = [
   { icon: Mail, label: "Email", value: "hello@mywebsite.com" },
@@ -24,14 +25,26 @@ export default function Contact() {
     setSubmitted,
   } = useUser();
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
-    console.log({ name, email, message });
-    setSubmitted(true);
+
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("email", email);
+    formData.append("message", message);
+
+    const result = await submitContactForm(formData);
+
+    if (result.success) {
+      setSubmitted(true);
+    } else {
+      alert(result.error);
+    }
   }
 
   return (
-    <section className="relative">
+    <section className="relative min-h-screen">
+      {/* Background Grid & Radial Fade */}
       <div className="bg-grid bg-radial-fade absolute inset-0 -z-10" />
 
       <div className="mx-auto max-w-6xl px-6 py-20">
@@ -51,7 +64,7 @@ export default function Contact() {
             {contactInfo.map(({ icon: Icon, label, value }) => (
               <Card
                 key={label}
-                className="border border-white/10 bg-card/60 backdrop-blur-md transition-all hover:border-primary/30"
+                className="border border-border/40 bg-card/80 backdrop-blur-md transition-all hover:border-primary/40 shadow-sm"
               >
                 <CardContent className="flex items-center gap-4 p-5">
                   <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary ring-1 ring-primary/20">
@@ -67,11 +80,11 @@ export default function Contact() {
           </div>
 
           {/* Form Section */}
-          <Card className="border border-white/10 bg-card/60 p-2 backdrop-blur-md md:col-span-3">
+          <Card className="border border-border/40 bg-card/80 backdrop-blur-md md:col-span-3 shadow-sm">
             <CardContent className="p-6">
               {submitted ? (
                 <div className="flex h-full min-h-72 flex-col items-center justify-center text-center">
-                  <div className="flex size-12 items-center justify-center rounded-full bg-primary/10 text-primary mb-4">
+                  <div className="flex size-12 items-center justify-center rounded-full bg-primary/10 text-primary mb-4 ring-1 ring-primary/20">
                     <Send className="size-6" />
                   </div>
                   <p className="text-xl font-semibold">Message sent!</p>
@@ -90,7 +103,7 @@ export default function Contact() {
                         required
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                        className="bg-background/50 border-white/10 focus-visible:ring-primary"
+                        className="bg-background/80 border-border/60 focus-visible:ring-primary shadow-inner"
                       />
                     </div>
 
@@ -103,7 +116,7 @@ export default function Contact() {
                         required
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className="bg-background/50 border-white/10 focus-visible:ring-primary"
+                        className="bg-background/80 border-border/60 focus-visible:ring-primary shadow-inner"
                       />
                     </div>
                   </div>
@@ -117,7 +130,7 @@ export default function Contact() {
                       placeholder="Tell us about your project..."
                       value={message}
                       onChange={(e) => setMessage(e.target.value)}
-                      className="w-full rounded-xl border border-white/10 bg-background/50 px-3 py-2 text-sm outline-none placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-primary"
+                      className="w-full rounded-xl border border-border/60 bg-background/80 px-3 py-2 text-sm outline-none placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-primary shadow-inner"
                     />
                   </div>
 
@@ -126,11 +139,12 @@ export default function Contact() {
                   </Button>
                 </form>
               )}
+
               {/* Note: Div debug state */}
-              <div className="mt-6 rounded-xl border border-white/10 bg-muted/50 p-4 text-xs font-mono">
-                <p><span className="font-semibold text-primary">Name:</span> {name}</p>
-                <p><span className="font-semibold text-primary">Email:</span> {email}</p>
-                <p><span className="font-semibold text-primary">Message:</span> {message}</p>
+              <div className="mt-6 rounded-xl border border-border/50 bg-muted/60 dark:bg-background/60 p-4 text-xs font-mono shadow-sm">
+                <p><span className="font-semibold text-primary">Name:</span> {name || "(kosong)"}</p>
+                <p><span className="font-semibold text-primary">Email:</span> {email || "(kosong)"}</p>
+                <p><span className="font-semibold text-primary">Message:</span> {message || "(kosong)"}</p>
               </div>
             </CardContent>
           </Card>

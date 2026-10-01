@@ -4,7 +4,7 @@ import localFont from "next/font/local";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { FavoriteProvider } from "@/context/FavoriteContext";
-import { UserProvider } from "@/context/UserContext"; // 👈 Tambahkan ini jika ada UserContext
+import { UserProvider } from "@/context/UserContext";
 import { ThemeProvider } from "@/components/ThemeProvider";
 
 const fontSans = localFont({
@@ -41,7 +41,6 @@ export default function RootLayout({ children }) {
           enableSystem
           disableTransitionOnChange
         >
-          {/* Bungkus dengan kedua provider */}
           <UserProvider>
             <FavoriteProvider>
               <Navbar />
