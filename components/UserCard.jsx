@@ -1,9 +1,10 @@
 "use client";
 
 import { Heart } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { useFavorite } from "@/context/FavoriteContext";
 import Link from "next/link";
+import { cn } from "@/lib/utils";
 
 import {
   Card,
@@ -13,15 +14,22 @@ import {
 } from "@/components/ui/card";
 
 export default function UserCard({ user }) {
-  const { favorites, addFavorite, removeFavorite, isFavorite } = useFavorite();
+  const { addFavorite, removeFavorite, isFavorite } = useFavorite();
 
+  // Memastikan pengecekan status favorite selalu menggunakan string ID
   const favorited = isFavorite(user.id);
 
-  const handleFavoriteClick = () => {
+  const handleFavoriteClick = async () => {
+    // Siapkan data user dengan ID berbentuk String agar sesuai dengan API & Context
+    const userPayload = {
+      ...user,
+      id: String(user.id),
+    };
+
     if (favorited) {
-      removeFavorite(user.id);
+      await removeFavorite(userPayload.id);
     } else {
-      addFavorite(user);
+      await addFavorite(userPayload);
     }
   };
 
@@ -56,13 +64,16 @@ export default function UserCard({ user }) {
         </p>
 
         <div className="mt-5 flex items-center gap-2">
-          <Link href={`/users/${user.id}`} className="flex-1">
-            <Button className="w-full rounded-full bg-primary text-primary-foreground font-semibold shadow-sm transition-all hover:opacity-90 hover:shadow-md hover:shadow-primary/20">
-              View Profile
-            </Button>
+          <Link 
+            href={`/users/${user.id}`} 
+            className={cn(
+              buttonVariants({ variant: "default" }),
+              "flex-1 rounded-full bg-primary text-primary-foreground font-semibold shadow-sm transition-all hover:opacity-90 hover:shadow-md hover:shadow-primary/20"
+            )}
+          >
+            View Profile
           </Link>
 
-          {/* Pasang handleFavoriteClick pada event onClick */}
           <Button
             onClick={handleFavoriteClick}
             variant={favorited ? "default" : "outline"}

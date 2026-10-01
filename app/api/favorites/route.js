@@ -1,13 +1,12 @@
-import { favorites } from "@/lib/db";
+import { getAllFavorites, addFavorite } from "@/lib/services/favoriteServices";
 
 export async function GET() {
-  return Response.json(favorites);
+  return Response.json(getAllFavorites());
 }
 
 export async function POST(request) {
   let body;
   
-  // Try-catch untuk menangani jika body kosong / bukan JSON valid
   try {
     body = await request.json();
   } catch (error) {
@@ -17,32 +16,11 @@ export async function POST(request) {
     );
   }
 
-  // Validasi jika object body kosong {}
-  if (!body || Object.keys(body).length === 0) {
-    return Response.json(
-      { error: "Body request tidak boleh kosong" },
-      { status: 400 }
-    );
+  const result = addFavorite(body);
+
+  if (!result.success) {
+    return Response.json({ error: result.error }, { status: result.status });
   }
 
-  // Validasi field wajib (id dan name)
-  if (!body.id || !body.name) {
-    return Response.json(
-      { error: "Field 'id' dan 'name' wajib diisi" },
-      { status: 400 }
-    );
-  }
-
-  // Validasi jika user sudah terdaftar di favorites
-  const alreadyExists = favorites.some((f) => String(f.id) === String(body.id));
-  if (alreadyExists) {
-    return Response.json(
-      { error: "User ini sudah difavoritkan" },
-      { status: 400 }
-    );
-  }
-
-  // Simpan data baru
-  favorites.push(body);
-  return Response.json(body, { status: 201 });
+  return Response.json(result.data, { status: result.status });
 }

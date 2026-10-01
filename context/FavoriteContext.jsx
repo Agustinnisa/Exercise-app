@@ -10,32 +10,63 @@ export function FavoriteProvider({ children }) {
   useEffect(() => {
     fetch("/api/favorites")
       .then((res) => res.json())
-      .then(setFavorites);
+      .then((data) => {
+        // Memastikan state favorites selalu berupa Array
+        if (Array.isArray(data)) {
+          setFavorites(data);
+        } else if (data && Array.isArray(data.data)) {
+          setFavorites(data.data);
+        } else if (data && Array.isArray(data.favorites)) {
+          setFavorites(data.favorites);
+        } else {
+          setFavorites([]);
+        }
+      })
+      .catch((err) => {
+        console.error("Gagal memuat favorites:", err);
+        setFavorites([]);
+      });
   }, []);
 
   async function addFavorite(user) {
-    const res = await fetch("/api/favorites", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(user),
-    });
+    // Mencegah duplikasi data lokal
+    if (isFavorite(user.id)) return;
 
-    if (res.ok) {
-      const saved = await res.json();
-      setFavorites((prev) => [...prev, saved]);
+    // Update state lokal terlebih dahulu (Optimistic UI)
+    const formattedUser = { ...user, id: String(user.id) };
+    setFavorites((prev) => [...prev, formattedUser]);
+
+    try {
+      const res = await fetch("/api/favorites", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formattedUser),
+      });
+
+      if (!res.ok) {
+        // Rollback jika gagal
+        setFavorites((prev) => prev.filter((f) => String(f.id) !== String(user.id)));
+      }
+    } catch (error) {
+      console.error("Gagal menambah favorite:", error);
+      setFavorites((prev) => prev.filter((f) => String(f.id) !== String(user.id)));
     }
   }
 
   async function removeFavorite(userId) {
-    const res = await fetch(`/api/favorites/${userId}`, { method: "DELETE" });
+    const stringId = String(userId);
+    setFavorites((prev) => prev.filter((f) => String(f.id) !== stringId));
 
-    if (res.ok) {
-      setFavorites((prev) => prev.filter((f) => f.id !== userId));
+    try {
+      await fetch(`/api/favorites/${stringId}`, { method: "DELETE" });
+    } catch (error) {
+      console.error("Gagal menghapus favorite:", error);
     }
   }
 
   async function updateFavoriteNote(userId, note) {
-    const res = await fetch(`/api/favorites/${userId}`, {
+    const stringId = String(userId);
+    const res = await fetch(`/api/favorites/${stringId}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ note }),
@@ -44,13 +75,15 @@ export function FavoriteProvider({ children }) {
     if (res.ok) {
       const updated = await res.json();
       setFavorites((prev) =>
-        prev.map((f) => (f.id === userId ? updated : f))
+        prev.map((f) => (String(f.id) === stringId ? updated : f))
       );
     }
   }
 
   function isFavorite(userId) {
-    return favorites.some((f) => f.id === userId);
+    if (!Array.isArray(favorites)) return false;
+    // Mengonversi kedua ID ke String agar perbandingan tepat
+    return favorites.some((f) => String(f.id) === String(userId));
   }
 
   const value = {

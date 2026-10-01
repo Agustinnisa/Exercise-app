@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useFavorite } from "@/context/FavoriteContext"; // ✅ Pakai FavoriteContext
+import { useFavorite } from "@/context/FavoriteContext";
 import ThemeToggle from "@/components/ThemeToogle";
 
 import { cn } from "@/lib/utils";
@@ -18,12 +18,13 @@ const links = [
 
 export default function Navbar() {
   const pathname = usePathname();
-  const { favorites } = useFavorite(); // ✅ Ambil array favorites dari API Context
+  const { favorites } = useFavorite();
+
+  const favoriteCount = Array.isArray(favorites) ? favorites.length : 0;
 
   return (
     <header className="sticky top-4 z-50 mx-auto w-full max-w-4xl px-4">
       <nav className="flex items-center justify-between gap-4 rounded-full border border-border/60 bg-background/80 px-5 py-2.5 shadow-lg shadow-black/5 backdrop-blur-xl transition-all dark:border-white/10 dark:shadow-black/20">
-        {/* Logo / Brand */}
         <Link
           href="/"
           className="shrink-0 text-base font-extrabold tracking-tight text-foreground transition-opacity hover:opacity-80 md:text-lg"
@@ -31,7 +32,6 @@ export default function Navbar() {
           RasunaSaid
         </Link>
 
-        {/* Desktop Navigation Links */}
         <div className="hidden items-center gap-1 text-sm text-muted-foreground sm:flex">
           {links.map((link) => {
             const isActive =
@@ -55,7 +55,6 @@ export default function Navbar() {
             );
           })}
 
-          {/* Link Favorite (Counter) */}
           <Link
             href="/favorites"
             className={cn(
@@ -65,11 +64,10 @@ export default function Navbar() {
                 : "text-muted-foreground"
             )}
           >
-            Favorite ({favorites.length})
+            Favorite ({favoriteCount})
           </Link>
         </div>
 
-        {/* Theme Toggle & CTA */}
         <div className="flex items-center gap-3">
           <ThemeToggle />
 
