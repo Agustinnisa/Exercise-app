@@ -12,14 +12,29 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
-// Fetch data user dari API internal yang sudah terhubung ke JSONPlaceholder
-async function getUser(id) {
-  const res = await fetch(`http://localhost:3000/api/users/${id}`, {
-    cache: "no-store",
-  });
+// Data lokal fallback jika API eksternal gagal
+const localUsers = [
+  { id: 1, name: "Leanne Graham", email: "leanne@example.com" },
+  { id: 2, name: "Ervin Howell", email: "ervin@example.com" },
+  { id: 3, name: "Clementine Bauch", email: "clementine@example.com" },
+];
 
-  if (!res.ok) return null;
-  return res.json();
+// Langsung fetch ke API eksternal tanpa lewat localhost
+async function getUser(id) {
+  try {
+    const res = await fetch(`https://jsonplaceholder.typicode.com/users/${id}`, {
+      cache: "no-store",
+    });
+
+    if (res.ok) {
+      return await res.json();
+    }
+  } catch (error) {
+    console.error("Gagal fetch dari JSONPlaceholder, menggunakan data lokal...", error);
+  }
+
+  // Fallback ke data lokal jika API eksternal gagal
+  return localUsers.find((u) => String(u.id) === String(id)) || null;
 }
 
 export default async function UserDetailPage({ params }) {
