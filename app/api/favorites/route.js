@@ -6,12 +6,12 @@ export async function GET() {
 
 export async function POST(request) {
   let body;
-  
+
   try {
     body = await request.json();
   } catch (error) {
     return Response.json(
-      { error: "Body tidak boleh kosong dan harus berupa JSON valid" },
+      { error: "Format JSON tidak valid" },
       { status: 400 }
     );
   }
