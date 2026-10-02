@@ -1,6 +1,7 @@
 "use client";
 
-import { Mail, MapPin, MessageCircle, Send } from "lucide-react";
+import { Mail, MapPin, MessageCircle, Send, ArrowRight } from "lucide-react";
+import Link from "next/link";
 import { useUser } from "@/context/UserContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -64,9 +65,12 @@ export default function Contact() {
             {contactInfo.map(({ icon: Icon, label, value }) => (
               <Card
                 key={label}
-                className="border border-border/40 bg-card/80 backdrop-blur-md transition-all hover:border-primary/40 shadow-sm"
+                className="group relative overflow-hidden border border-border/60 bg-card/60 backdrop-blur-md transition-all duration-300 hover:border-primary/40 hover:shadow-xl hover:shadow-primary/10"
               >
-                <CardContent className="flex items-center gap-4 p-5">
+                {/* Mengubah opacity dari /15 ke /5 agar gradien lebih halus */}
+                <div className="absolute top-0 right-0 h-24 w-24 rounded-bl-full bg-primary/5 transition-all group-hover:bg-primary/10" />
+
+                <CardContent className="relative flex items-center gap-4 p-5">
                   <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary ring-1 ring-primary/20">
                     <Icon className="size-5" />
                   </div>
@@ -80,17 +84,29 @@ export default function Contact() {
           </div>
 
           {/* Form Section */}
-          <Card className="border border-border/40 bg-card/80 backdrop-blur-md md:col-span-3 shadow-sm">
-            <CardContent className="p-6">
+          <Card className="group relative overflow-hidden border border-border/60 bg-card/60 backdrop-blur-md md:col-span-3 shadow-sm transition-all duration-300 hover:border-primary/40 hover:shadow-xl hover:shadow-primary/10">
+            {/* Mengubah opacity dari /15 ke /5 agar gradien lebih halus */}
+            <div className="absolute top-0 right-0 h-32 w-32 rounded-bl-full bg-primary/5 transition-all group-hover:bg-primary/10" />
+
+            <CardContent className="relative p-6">
               {submitted ? (
                 <div className="flex h-full min-h-72 flex-col items-center justify-center text-center">
                   <div className="flex size-12 items-center justify-center rounded-full bg-primary/10 text-primary mb-4 ring-1 ring-primary/20">
                     <Send className="size-6" />
                   </div>
                   <p className="text-xl font-semibold">Message sent!</p>
-                  <p className="mt-2 text-sm text-muted-foreground">
-                    Thanks for reaching out — we&apos;ll reply soon.
+                  <p className="mt-2 text-sm text-muted-foreground max-w-sm">
+                    Thanks for reaching out — we&apos;ll reply soon. You can check your inbox to see the submitted message.
                   </p>
+                  <div className="mt-6">
+                    <Link
+                      href="/messages"
+                      className="group inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-md transition-all hover:opacity-90"
+                    >
+                      <span>Lihat Pesan Masuk</span>
+                      <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
+                    </Link>
+                  </div>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-5">
