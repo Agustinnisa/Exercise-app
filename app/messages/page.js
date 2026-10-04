@@ -1,12 +1,25 @@
-import { getMessages } from "@/lib/db";
-import { deleteMessageAction } from "./action";
+"use client";
+
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Trash2, MessageSquare, Mail, User } from "lucide-react";
 
-export default async function MessagesPage() {
-  // Ambil pesan langsung dari Vercel KV database
-  const messages = await getMessages();
+export default function MessagesPage() {
+  // Ambil data langsung dari localStorage saat pertama kali state dibuat
+  const [messages, setMessages] = useState(() => {
+    if (typeof window !== "undefined") {
+      const savedMessages = localStorage.getItem("messages");
+      return savedMessages ? JSON.parse(savedMessages) : [];
+    }
+    return [];
+  });
+
+  const handleDelete = (id) => {
+    const updatedMessages = messages.filter((msg) => msg.id !== id);
+    setMessages(updatedMessages);
+    localStorage.setItem("messages", JSON.stringify(updatedMessages));
+  };
 
   return (
     <section className="relative min-h-screen">
@@ -75,17 +88,15 @@ export default async function MessagesPage() {
                     </div>
 
                     <div className="flex self-end sm:self-center sm:ml-4">
-                      <form action={deleteMessageAction}>
-                        <input type="hidden" name="id" value={msg.id} />
-                        <Button
-                          type="submit"
-                          size="sm"
-                          className="gap-2 rounded-xl border border-destructive/30 bg-destructive/10 text-destructive hover:bg-destructive hover:text-white dark:bg-destructive/15 dark:text-red-400 dark:hover:bg-destructive dark:hover:text-white transition-all duration-200 shadow-sm font-medium cursor-pointer"
-                        >
-                          <Trash2 className="size-4" />
-                          <span>Hapus</span>
-                        </Button>
-                      </form>
+                      <Button
+                        type="button"
+                        onClick={() => handleDelete(msg.id)}
+                        size="sm"
+                        className="gap-2 rounded-xl border border-destructive/30 bg-destructive/10 text-destructive hover:bg-destructive hover:text-white dark:bg-destructive/15 dark:text-red-400 dark:hover:bg-destructive dark:hover:text-white transition-all duration-200 shadow-sm font-medium cursor-pointer"
+                      >
+                        <Trash2 className="size-4" />
+                        <span>Hapus</span>
+                      </Button>
                     </div>
 
                   </div>

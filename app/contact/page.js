@@ -6,7 +6,6 @@ import { useUser } from "@/context/UserContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
-import { submitContactForm } from "./action";
 
 const contactInfo = [
   { icon: Mail, label: "Email", value: "hello@mywebsite.com" },
@@ -29,18 +28,20 @@ export default function Contact() {
   async function handleSubmit(event) {
     event.preventDefault();
 
-    const formData = new FormData();
-    formData.append("name", name);
-    formData.append("email", email);
-    formData.append("message", message);
+    // Simpan ke localStorage agar bisa diakses secara lokal di browser
+    const existingMessages = JSON.parse(localStorage.getItem('messages') || '[]');
+    const newMessage = {
+      id: Date.now().toString(),
+      name,
+      email,
+      message,
+      createdAt: new Date().toISOString(),
+    };
+    
+    const updatedMessages = [newMessage, ...existingMessages];
+    localStorage.setItem('messages', JSON.stringify(updatedMessages));
 
-    const result = await submitContactForm(formData);
-
-    if (result.success) {
-      setSubmitted(true);
-    } else {
-      alert(result.error);
-    }
+    setSubmitted(true);
   }
 
   return (
@@ -67,7 +68,6 @@ export default function Contact() {
                 key={label}
                 className="group relative overflow-hidden border border-border/60 bg-card/60 backdrop-blur-md transition-all duration-300 hover:border-primary/40 hover:shadow-xl hover:shadow-primary/10"
               >
-                {/* Mengubah opacity dari /15 ke /5 agar gradien lebih halus */}
                 <div className="absolute top-0 right-0 h-24 w-24 rounded-bl-full bg-primary/5 transition-all group-hover:bg-primary/10" />
 
                 <CardContent className="relative flex items-center gap-4 p-5">
@@ -85,7 +85,6 @@ export default function Contact() {
 
           {/* Form Section */}
           <Card className="group relative overflow-hidden border border-border/60 bg-card/60 backdrop-blur-md md:col-span-3 shadow-sm transition-all duration-300 hover:border-primary/40 hover:shadow-xl hover:shadow-primary/10">
-            {/* Mengubah opacity dari /15 ke /5 agar gradien lebih halus */}
             <div className="absolute top-0 right-0 h-32 w-32 rounded-bl-full bg-primary/5 transition-all group-hover:bg-primary/10" />
 
             <CardContent className="relative p-6">
