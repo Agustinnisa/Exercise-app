@@ -1,10 +1,13 @@
-import { messages } from "@/lib/db";
+import { getMessages } from "@/lib/db";
 import { deleteMessageAction } from "./action";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Trash2, MessageSquare, Mail, User } from "lucide-react";
 
-export default function MessagesPage() {
+export default async function MessagesPage() {
+  // Ambil pesan langsung dari Vercel KV database
+  const messages = await getMessages();
+
   return (
     <section className="relative min-h-screen">
       {/* Background Grid & Radial Fade */}
@@ -77,7 +80,7 @@ export default function MessagesPage() {
                         <Button
                           type="submit"
                           size="sm"
-                          className="gap-2 rounded-xl border border-destructive/30 bg-destructive/10 text-destructive hover:bg-destructive hover:text-white dark:bg-destructive/15 dark:text-red-400 dark:hover:bg-destructive dark:hover:text-white transition-all duration-200 shadow-sm font-medium"
+                          className="gap-2 rounded-xl border border-destructive/30 bg-destructive/10 text-destructive hover:bg-destructive hover:text-white dark:bg-destructive/15 dark:text-red-400 dark:hover:bg-destructive dark:hover:text-white transition-all duration-200 shadow-sm font-medium cursor-pointer"
                         >
                           <Trash2 className="size-4" />
                           <span>Hapus</span>

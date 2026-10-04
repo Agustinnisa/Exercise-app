@@ -1,6 +1,6 @@
 "use server";
 
-import { messages } from "@/lib/db";
+import { getMessages, saveMessages } from "@/lib/db";
 
 export async function submitContactForm(formData) {
   const name = formData.get("name");
@@ -11,13 +11,18 @@ export async function submitContactForm(formData) {
     return { success: false, error: "Semua field wajib diisi." };
   }
 
-  messages.push({
+  const existingMessages = await getMessages();
+
+  const newMessage = {
     id: Date.now(),
     name,
     email,
     message,
     createdAt: new Date().toISOString(),
-  });
+  };
+
+  // Tambahkan pesan baru ke daftar pesan lama
+  await saveMessages([newMessage, ...existingMessages]);
 
   return { success: true };
 }
