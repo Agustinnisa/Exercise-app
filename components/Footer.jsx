@@ -93,20 +93,16 @@ export function Footer() {
         </div>
 
         {/* Garis Pembatas & Copyright */}
-        <div className="mt-16 flex flex-col gap-4 border-t border-neutral-200/80 pt-8 text-sm text-neutral-500 sm:flex-row sm:items-center sm:justify-between dark:border-white/10 dark:text-neutral-500">
-          <p>© 2026 RasunaSaid. All rights reserved.</p>
-          <div className="flex items-center gap-6">
-            <span className="inline-flex items-center gap-1.5">
-              <span className="size-2 rounded-full bg-emerald-500 animate-pulse" />
-              System Operational
-            </span>
-            <span>Built with Next.js &amp; Tailwind CSS</span>
-          </div>
-        </div>
-      </div>
-    </footer>
-  );
-}
+                <div className="mt-16 flex flex-col gap-4 border-t border-neutral-200/80 pt-8 text-sm text-neutral-500 sm:flex-row sm:items-center sm:justify-between dark:border-white/10 dark:text-neutral-500">
+                  <p>© 2026 RasunaSaid. All rights reserved.</p>
+                  <div className="flex items-center gap-6">
+                    <span>Built with Next.js &amp; Tailwind CSS</span>
+                  </div>
+                </div>
+              </div>
+            </footer>
+          );
+        }
 
 // Tambahkan default export agar fleksibel untuk kedua jenis import
 export default Footer;
