@@ -53,24 +53,17 @@ export default function UsersPage() {
     );
   }
 
-  // Loading skeleton visual
+  // Loading skeleton visual dengan indikator teks di tengah layar
   if (loading) {
     return (
-      <section className="relative">
-        <div className="bg-grid bg-radial-fade absolute inset-0 -z-10" />
-        <div className="mx-auto max-w-6xl px-6 py-20">
-          <div className="max-w-2xl space-y-3">
-            <div className="h-4 w-20 animate-pulse rounded-full bg-primary/20" />
-            <div className="h-10 w-64 animate-pulse rounded-xl bg-muted" />
-            <div className="h-4 w-80 animate-pulse rounded-lg bg-muted/60" />
-          </div>
-          <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {[...Array(6)].map((_, i) => (
-              <div key={i} className="h-48 animate-pulse rounded-2xl border border-border/60 bg-card/40" />
-            ))}
-          </div>
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/60 backdrop-blur-sm">
+        <div className="flex items-center gap-3 rounded-2xl border border-primary/20 bg-card px-6 py-4 shadow-xl">
+          <Loader2 className="size-6 animate-spin text-primary" />
+          <p className="text-base font-medium text-foreground">
+            Loading users data, please wait...
+          </p>
         </div>
-      </section>
+      </div>
     );
   }
 
