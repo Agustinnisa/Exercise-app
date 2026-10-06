@@ -1,6 +1,6 @@
 import { connection } from "next/server";
 import { supabase } from "@/lib/supabase";
-import { deleteMessageAction } from "./actions";
+import { deleteMessageAction } from "./action";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Trash2, MessageSquare, Mail, User } from "lucide-react";
