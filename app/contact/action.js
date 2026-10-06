@@ -1,6 +1,7 @@
 "use server";
 
-import { getMessages, saveMessages } from "@/lib/db";
+import { revalidatePath } from "next/cache";
+import { supabase } from "@/lib/supabase";
 
 export async function submitContactForm(formData) {
   const name = formData.get("name");
@@ -11,18 +12,15 @@ export async function submitContactForm(formData) {
     return { success: false, error: "Semua field wajib diisi." };
   }
 
-  const existingMessages = await getMessages();
+  const { error } = await supabase
+    .from("messages")
+    .insert({ name, email, message });
 
-  const newMessage = {
-    id: Date.now(),
-    name,
-    email,
-    message,
-    createdAt: new Date().toISOString(),
-  };
+  if (error) {
+    return { success: false, error: error.message };
+  }
 
-  // Tambahkan pesan baru ke daftar pesan lama
-  await saveMessages([newMessage, ...existingMessages]);
+  revalidatePath("/messages");
 
   return { success: true };
 }
