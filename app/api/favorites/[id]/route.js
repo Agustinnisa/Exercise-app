@@ -2,32 +2,47 @@ import { removeFavorite, updateFavoriteNote } from "@/lib/services/favoriteServi
 
 // DELETE: Hapus favorite berdasarkan ID
 export async function DELETE(request, { params }) {
-  const { id } = await params;
-  const result = await removeFavorite(id);
+  try {
+    const resolvedParams = await params;
+    const id = resolvedParams?.id;
 
-  if (!result.success) {
-    return Response.json({ error: result.error }, { status: result.status });
+    if (!id) {
+      return Response.json({ error: "ID tidak ditemukan" }, { status: 400 });
+    }
+
+    const result = await removeFavorite(id);
+
+    if (!result.success) {
+      return Response.json({ error: result.error }, { status: result.status || 500 });
+    }
+
+    return Response.json({ message: "Berhasil dihapus" }, { status: 200 });
+  } catch (error) {
+    return Response.json({ error: error.message }, { status: 500 });
   }
-
-  return Response.json({ message: "Berhasil dihapus" });
 }
 
 // PATCH: Update data favorite (misal menambahkan field 'note')
 export async function PATCH(request, { params }) {
-  const { id } = await params;
-  
-  let body;
   try {
-    body = await request.json();
+    const resolvedParams = await params;
+    const id = resolvedParams?.id;
+
+    let body;
+    try {
+      body = await request.json();
+    } catch (error) {
+      return Response.json({ error: "Body harus berupa JSON valid" }, { status: 400 });
+    }
+
+    const result = await updateFavoriteNote(id, body.note);
+
+    if (!result.success) {
+      return Response.json({ error: result.error }, { status: result.status || 500 });
+    }
+
+    return Response.json(result.data, { status: 200 });
   } catch (error) {
-    return Response.json({ error: "Body harus berupa JSON valid" }, { status: 400 });
+    return Response.json({ error: error.message }, { status: 500 });
   }
-
-  const result = await updateFavoriteNote(id, body.note);
-
-  if (!result.success) {
-    return Response.json({ error: result.error }, { status: result.status });
-  }
-
-  return Response.json(result.data, { status: 200 });
 }

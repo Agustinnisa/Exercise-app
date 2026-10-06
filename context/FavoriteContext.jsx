@@ -11,7 +11,6 @@ export function FavoriteProvider({ children }) {
     fetch("/api/favorites")
       .then((res) => res.json())
       .then((data) => {
-        // Memastikan state favorites selalu berupa Array
         if (Array.isArray(data)) {
           setFavorites(data);
         } else if (data && Array.isArray(data.data)) {
@@ -29,10 +28,8 @@ export function FavoriteProvider({ children }) {
   }, []);
 
   async function addFavorite(user) {
-    // Mencegah duplikasi data lokal
     if (isFavorite(user.id)) return;
 
-    // Update state lokal terlebih dahulu (Optimistic UI)
     const formattedUser = { ...user, id: String(user.id) };
     setFavorites((prev) => [...prev, formattedUser]);
 
@@ -44,23 +41,43 @@ export function FavoriteProvider({ children }) {
       });
 
       if (!res.ok) {
-        // Rollback jika gagal
-        setFavorites((prev) => prev.filter((f) => String(f.id) !== String(user.id)));
+        // Rollback jika server gagal menyimpan
+        setFavorites((prev) =>
+          prev.filter((f) => String(f.id ?? f.user_id) !== String(user.id))
+        );
       }
     } catch (error) {
       console.error("Gagal menambah favorite:", error);
-      setFavorites((prev) => prev.filter((f) => String(f.id) !== String(user.id)));
+      setFavorites((prev) =>
+        prev.filter((f) => String(f.id ?? f.user_id) !== String(user.id))
+      );
     }
   }
 
   async function removeFavorite(userId) {
     const stringId = String(userId);
-    setFavorites((prev) => prev.filter((f) => String(f.id) !== stringId));
+    
+    // Simpan data lama untuk rollback jika request gagal
+    const previousFavorites = [...favorites];
+
+    // Optimistic Update: Hapus dari state
+    setFavorites((prev) =>
+      prev.filter((f) => String(f.id ?? f.user_id) !== stringId)
+    );
 
     try {
-      await fetch(`/api/favorites/${stringId}`, { method: "DELETE" });
+      const res = await fetch(`/api/favorites/${stringId}`, {
+        method: "DELETE",
+      });
+
+      if (!res.ok) {
+        console.error("Gagal menghapus dari server, membatalkan perubahan...");
+        // Rollback ke state sebelumnya jika server merespons error
+        setFavorites(previousFavorites);
+      }
     } catch (error) {
       console.error("Gagal menghapus favorite:", error);
+      setFavorites(previousFavorites);
     }
   }
 
@@ -75,15 +92,19 @@ export function FavoriteProvider({ children }) {
     if (res.ok) {
       const updated = await res.json();
       setFavorites((prev) =>
-        prev.map((f) => (String(f.id) === stringId ? updated : f))
+        prev.map((f) =>
+          String(f.id ?? f.user_id) === stringId ? updated : f
+        )
       );
     }
   }
 
   function isFavorite(userId) {
     if (!Array.isArray(favorites)) return false;
-    // Mengonversi kedua ID ke String agar perbandingan tepat
-    return favorites.some((f) => String(f.id) === String(userId));
+    // Pengecekan aman terhadap property 'id' maupun 'user_id'
+    return favorites.some(
+      (f) => String(f.id ?? f.user_id) === String(userId)
+    );
   }
 
   const value = {
