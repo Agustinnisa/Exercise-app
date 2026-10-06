@@ -30,7 +30,13 @@ export function FavoriteProvider({ children }) {
   async function addFavorite(user) {
     if (isFavorite(user.id)) return;
 
-    const formattedUser = { ...user, id: String(user.id) };
+    const formattedUser = {
+      id: String(user.id),
+      name: user.name || "",
+      email: user.email || "",
+      company: typeof user.company === "object" ? user.company?.name || "" : user.company || ""
+    };
+
     setFavorites((prev) => [...prev, formattedUser]);
 
     try {
@@ -41,7 +47,6 @@ export function FavoriteProvider({ children }) {
       });
 
       if (!res.ok) {
-        // Rollback jika server gagal menyimpan
         setFavorites((prev) =>
           prev.filter((f) => String(f.id ?? f.user_id) !== String(user.id))
         );
@@ -56,11 +61,8 @@ export function FavoriteProvider({ children }) {
 
   async function removeFavorite(userId) {
     const stringId = String(userId);
-    
-    // Simpan data lama untuk rollback jika request gagal
     const previousFavorites = [...favorites];
 
-    // Optimistic Update: Hapus dari state
     setFavorites((prev) =>
       prev.filter((f) => String(f.id ?? f.user_id) !== stringId)
     );
@@ -71,8 +73,6 @@ export function FavoriteProvider({ children }) {
       });
 
       if (!res.ok) {
-        console.error("Gagal menghapus dari server, membatalkan perubahan...");
-        // Rollback ke state sebelumnya jika server merespons error
         setFavorites(previousFavorites);
       }
     } catch (error) {
@@ -101,7 +101,6 @@ export function FavoriteProvider({ children }) {
 
   function isFavorite(userId) {
     if (!Array.isArray(favorites)) return false;
-    // Pengecekan aman terhadap property 'id' maupun 'user_id'
     return favorites.some(
       (f) => String(f.id ?? f.user_id) === String(userId)
     );
