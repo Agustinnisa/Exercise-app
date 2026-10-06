@@ -3,7 +3,7 @@ import { removeFavorite, updateFavoriteNote } from "@/lib/services/favoriteServi
 // DELETE: Hapus favorite berdasarkan ID
 export async function DELETE(request, { params }) {
   const { id } = await params;
-  const result = removeFavorite(id);
+  const result = await removeFavorite(id);
 
   if (!result.success) {
     return Response.json({ error: result.error }, { status: result.status });
@@ -23,7 +23,7 @@ export async function PATCH(request, { params }) {
     return Response.json({ error: "Body harus berupa JSON valid" }, { status: 400 });
   }
 
-  const result = updateFavoriteNote(id, body.note);
+  const result = await updateFavoriteNote(id, body.note);
 
   if (!result.success) {
     return Response.json({ error: result.error }, { status: result.status });
