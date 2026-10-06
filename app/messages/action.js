@@ -1,19 +1,28 @@
 "use server";
 
-import { getMessages, saveMessages } from "@/lib/db";
+import { supabase } from "@/lib/supabase";
 import { revalidatePath } from "next/cache";
 
 export async function deleteMessageAction(formData) {
-  const id = Number(formData.get("id"));
+  const rawId = formData.get("id");
 
-  const existingMessages = await getMessages();
+  if (!rawId) return;
 
-  // Filter out pesan yang dihapus
-  const updatedMessages = existingMessages.filter((msg) => msg.id !== id);
+  // Jika ID di Supabase berbentuk angka (integer), konversi ke Number.
+  // Jika ID berbentuk UUID (string), gunakan rawId langsung.
+  const id = isNaN(Number(rawId)) ? rawId : Number(rawId);
 
-  // Simpan kembali daftar pesan terbaru
-  await saveMessages(updatedMessages);
+  // Hapus baris pesan dari tabel Supabase berdasarkan ID
+  const { error } = await supabase
+    .from("messages")
+    .delete()
+    .eq("id", id);
 
-  // Refresh cache halaman messages otomatis
+  if (error) {
+    console.error("Gagal menghapus pesan:", error.message);
+    return;
+  }
+
+  // Refresh data pada halaman /messages
   revalidatePath("/messages");
 }
