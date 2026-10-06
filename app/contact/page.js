@@ -1,11 +1,13 @@
 "use client";
 
+import { useState, useTransition } from "react";
 import { Mail, MapPin, MessageCircle, Send, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { useUser } from "@/context/UserContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
+import { submitContactForm } from "./actions";
 
 const contactInfo = [
   { icon: Mail, label: "Email", value: "hello@mywebsite.com" },
@@ -25,23 +27,27 @@ export default function Contact() {
     setSubmitted,
   } = useUser();
 
+  const [errorMsg, setErrorMsg] = useState("");
+  const [isPending, startTransition] = useTransition();
+
   async function handleSubmit(event) {
     event.preventDefault();
+    setErrorMsg("");
 
-    // Simpan ke localStorage agar bisa diakses secara lokal di browser
-    const existingMessages = JSON.parse(localStorage.getItem('messages') || '[]');
-    const newMessage = {
-      id: Date.now().toString(),
-      name,
-      email,
-      message,
-      createdAt: new Date().toISOString(),
-    };
-    
-    const updatedMessages = [newMessage, ...existingMessages];
-    localStorage.setItem('messages', JSON.stringify(updatedMessages));
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("email", email);
+    formData.append("message", message);
 
-    setSubmitted(true);
+    startTransition(async () => {
+      const result = await submitContactForm(formData);
+
+      if (result && result.success) {
+        setSubmitted(true);
+      } else {
+        setErrorMsg(result?.error || "Terjadi kesalahan saat mengirim pesan.");
+      }
+    });
   }
 
   return (
@@ -109,6 +115,12 @@ export default function Contact() {
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-5">
+                  {errorMsg && (
+                    <div className="rounded-xl border border-red-300 bg-red-50 p-3 text-sm text-red-600 dark:bg-red-950/50 dark:border-red-800">
+                      {errorMsg}
+                    </div>
+                  )}
+
                   <div className="grid gap-4 sm:grid-cols-2">
                     <div className="space-y-2">
                       <label htmlFor="name" className="text-sm font-medium">Name</label>
@@ -149,8 +161,13 @@ export default function Contact() {
                     />
                   </div>
 
-                  <Button type="submit" size="lg" className="w-full rounded-full font-semibold shadow-md transition-all hover:shadow-primary/20">
-                    Send message
+                  <Button 
+                    type="submit" 
+                    size="lg" 
+                    disabled={isPending}
+                    className="w-full rounded-full font-semibold shadow-md transition-all hover:shadow-primary/20"
+                  >
+                    {isPending ? "Sending..." : "Send message"}
                   </Button>
                 </form>
               )}
