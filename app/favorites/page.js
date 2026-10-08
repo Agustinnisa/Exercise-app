@@ -1,11 +1,11 @@
 "use client";
 
-// 💡 Perbaiki import: Gunakan useFavorite dari FavoriteContext
-import { useFavorite } from "@/context/FavoriteContext";
+import Link from "next/link";
+import { Heart } from "lucide-react";
 import UserCard from "@/components/UserCard";
+import { useFavorite } from "@/context/FavoriteContext";
 
 export default function FavoritesPage() {
-  // 💡 Panggil useFavorite() alih-alih useUser()
   const { favorites } = useFavorite();
 
   return (
@@ -29,16 +29,38 @@ export default function FavoritesPage() {
         {/* List Card User Favorit */}
         <div className="mt-12">
           {!favorites || favorites.length === 0 ? (
-            <div className="rounded-2xl border border-border/60 bg-card/40 p-12 text-center backdrop-blur-sm">
-              <p className="text-lg font-medium text-muted-foreground">
-                Belum ada user yang ditambahkan ke favorit.
+            <div className="mt-16 flex flex-col items-center gap-3 py-16 text-center text-muted-foreground rounded-2xl border border-border/60 bg-card/40 backdrop-blur-sm">
+              <Heart className="size-8" />
+              <p className="text-lg font-medium">
+                Belum ada user favorit. Tandai dulu dari User Directory.
               </p>
+              <Link
+                href="/users"
+                className="text-sm font-medium text-primary hover:underline"
+              >
+                Buka User Directory →
+              </Link>
             </div>
           ) : (
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {favorites.map((user) => (
-                <UserCard key={user.id} user={user} />
-              ))}
+              {favorites.map((favorite) => {
+                // Mendukung struktur data relasi Supabase (app_users) maupun data fallback/flat
+                const userData = favorite.app_users
+                  ? {
+                      id: favorite.app_users.id,
+                      name: favorite.app_users.name,
+                      email: favorite.app_users.email,
+                      company: { name: favorite.app_users.company_name },
+                    }
+                  : favorite;
+
+                return (
+                  <UserCard
+                    key={favorite.id || favorite.user_id}
+                    user={userData}
+                  />
+                );
+              })}
             </div>
           )}
         </div>

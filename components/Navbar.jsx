@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useFavorite } from "@/context/FavoriteContext";
+import { useAuth } from "@/context/AuthContext";
 import ThemeToggle from "@/components/ThemeToogle";
 import { Menu, X } from "lucide-react";
 
@@ -21,13 +22,14 @@ const links = [
 export default function Navbar() {
   const pathname = usePathname();
   const { favorites } = useFavorite();
+  const { isLoggedIn } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
 
   const favoriteCount = Array.isArray(favorites) ? favorites.length : 0;
 
   return (
     <header className="sticky top-4 z-50 mx-auto w-full max-w-5xl px-4">
-      <nav className="flex flex-col rounded-3xl border border-neutral-200/80 bg-white/80 px-6 py-3 shadow-xl shadow-neutral-900/5 backdrop-blur-xl transition-all dark:border-white/10 dark:bg-neutral-950/80 dark:shadow-black/30">
+      <nav className="flex flex-col rounded-3xl border border-neutral-200/85 bg-white/80 px-6 py-3 shadow-xl shadow-neutral-900/5 backdrop-blur-xl transition-all dark:border-white/10 dark:bg-neutral-950/80 dark:shadow-black/30">
         <div className="flex items-center justify-between gap-4">
           <Link
             href="/"
@@ -76,15 +78,29 @@ export default function Navbar() {
           <div className="flex items-center gap-2">
             <ThemeToggle />
 
-            <Link
-              href="/contact"
-              className={cn(
-                buttonVariants({ size: "default" }),
-                "hidden rounded-full px-5 font-semibold shadow-sm transition-all hover:shadow-md hover:shadow-primary/20 sm:inline-flex"
+            {/* Tombol Auth (Login / Logout) untuk Desktop */}
+            <div className="hidden sm:inline-flex">
+              {isLoggedIn ? (
+                <form action="/auth/signout" method="post">
+                  <button
+                    type="submit"
+                    className={cn(
+                      buttonVariants({ size: "sm", variant: "outline" }),
+                      "rounded-full px-4"
+                    )}
+                  >
+                    Logout
+                  </button>
+                </form>
+              ) : (
+                <Link
+                  href="/login"
+                  className={cn(buttonVariants({ size: "sm" }), "rounded-full px-4")}
+                >
+                  Login
+                </Link>
               )}
-            >
-              Get in touch
-            </Link>
+            </div>
 
             {/* Tombol Hamburger Mobile */}
             <button
@@ -137,16 +153,32 @@ export default function Navbar() {
               Favorite ({favoriteCount})
             </Link>
 
-            <Link
-              href="/contact"
-              onClick={() => setIsOpen(false)}
-              className={cn(
-                buttonVariants({ size: "default" }),
-                "mt-2 w-full rounded-full font-semibold shadow-sm"
+            <div className="mt-2 w-full pt-2 border-t border-neutral-200/40 dark:border-white/5">
+              {isLoggedIn ? (
+                <form action="/auth/signout" method="post" className="w-full">
+                  <button
+                    type="submit"
+                    className={cn(
+                      buttonVariants({ size: "default", variant: "outline" }),
+                      "w-full rounded-full font-semibold shadow-sm"
+                    )}
+                  >
+                    Logout
+                  </button>
+                </form>
+              ) : (
+                <Link
+                  href="/login"
+                  onClick={() => setIsOpen(false)}
+                  className={cn(
+                    buttonVariants({ size: "default" }),
+                    "w-full rounded-full font-semibold shadow-sm"
+                  )}
+                >
+                  Login
+                </Link>
               )}
-            >
-              Get in touch
-            </Link>
+            </div>
           </div>
         )}
       </nav>

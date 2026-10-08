@@ -16,7 +16,7 @@ export async function DELETE(request, { params }) {
       return Response.json({ error: result.error }, { status: result.status || 500 });
     }
 
-    return Response.json({ message: "Berhasil dihapus" }, { status: 200 });
+    return Response.json({ message: result.message || "Berhasil dihapus" }, { status: 200 });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }

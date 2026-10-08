@@ -31,6 +31,9 @@ export async function POST(request) {
     return Response.json(result.data, { status: result.status });
   } catch (error) {
     console.error("API POST Error:", error);
-    return Response.json({ error: error.message || "Terjadi kesalahan pada server" }, { status: 500 });
+    return Response.json(
+      { error: error.message || "Terjadi kesalahan pada server" },
+      { status: 500 }
+    );
   }
 }

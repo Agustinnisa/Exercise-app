@@ -1,16 +1,25 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState } from "react";
+import { useAuth } from "@/context/AuthContext";
 
 const FavoriteContext = createContext(undefined);
 
 export function FavoriteProvider({ children }) {
+  const { isLoggedIn } = useAuth();
   const [favorites, setFavorites] = useState([]);
 
   useEffect(() => {
+    if (!isLoggedIn) {
+      return;
+    }
+
+    let isMounted = true;
+
     fetch("/api/favorites")
       .then((res) => res.json())
       .then((data) => {
+        if (!isMounted) return;
         if (Array.isArray(data)) {
           setFavorites(data);
         } else if (data && Array.isArray(data.data)) {
@@ -22,16 +31,29 @@ export function FavoriteProvider({ children }) {
         }
       })
       .catch((err) => {
+        if (!isMounted) return;
         console.error("Gagal memuat favorites:", err);
         setFavorites([]);
       });
-  }, []);
+
+    return () => {
+      isMounted = false;
+    };
+  }, [isLoggedIn]);
+
+  // Jika tidak login, pastikan favorites selalu kosong tanpa memicu setFavorites di dalam effect
+  const activeFavorites = isLoggedIn ? favorites : [];
 
   async function addFavorite(user) {
+    if (!isLoggedIn) {
+      alert("Silakan login terlebih dahulu untuk menambahkan favorite.");
+      return;
+    }
+
     if (isFavorite(user.id)) return;
 
     const formattedUser = {
-      id: String(user.id),
+      user_id: String(user.id),
       name: user.name || "",
       email: user.email || "",
       company: typeof user.company === "object" ? user.company?.name || "" : user.company || ""
@@ -49,6 +71,11 @@ export function FavoriteProvider({ children }) {
       if (!res.ok) {
         setFavorites((prev) =>
           prev.filter((f) => String(f.id ?? f.user_id) !== String(user.id))
+        );
+      } else {
+        const saved = await res.json();
+        setFavorites((prev) => 
+          prev.map((f) => String(f.user_id) === String(user.id) ? (saved || formattedUser) : f)
         );
       }
     } catch (error) {
@@ -100,14 +127,14 @@ export function FavoriteProvider({ children }) {
   }
 
   function isFavorite(userId) {
-    if (!Array.isArray(favorites)) return false;
-    return favorites.some(
+    if (!Array.isArray(activeFavorites)) return false;
+    return activeFavorites.some(
       (f) => String(f.id ?? f.user_id) === String(userId)
     );
   }
 
   const value = {
-    favorites,
+    favorites: activeFavorites,
     addFavorite,
     removeFavorite,
     updateFavoriteNote,
