@@ -1,6 +1,6 @@
 "use server";
 
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 
 export async function deleteMessageAction(formData) {
@@ -8,9 +8,10 @@ export async function deleteMessageAction(formData) {
 
   if (!rawId) return;
 
-  // Jika ID di Supabase berbentuk angka (integer), konversi ke Number.
-  // Jika ID berbentuk UUID (string), gunakan rawId langsung.
   const id = isNaN(Number(rawId)) ? rawId : Number(rawId);
+
+  // Inisialisasi client supabase server secara async
+  const supabase = await createClient();
 
   // Hapus baris pesan dari tabel Supabase berdasarkan ID
   const { error } = await supabase

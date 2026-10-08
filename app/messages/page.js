@@ -1,5 +1,5 @@
 import { connection } from "next/server";
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/lib/supabase/server";
 import { deleteMessageAction } from "./action";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -7,6 +7,9 @@ import { Trash2, MessageSquare, Mail, User } from "lucide-react";
 
 export default async function MessagesPage() {
   await connection();
+
+  // Inisialisasi client supabase server secara async
+  const supabase = await createClient();
 
   const { data: messages, error } = await supabase
     .from("messages")
