@@ -10,10 +10,8 @@ export function FavoriteProvider({ children }) {
   const [favorites, setFavorites] = useState([]);
 
   useEffect(() => {
-    if (!isLoggedIn) {
-      setFavorites([]);
-      return;
-    }
+    // Jika tidak login, jangan jalankan fetch
+    if (!isLoggedIn) return;
 
     let isMounted = true;
 
@@ -29,7 +27,6 @@ export function FavoriteProvider({ children }) {
           ? data.favorites
           : [];
 
-        // Pastikan setiap item selalu memiliki properti user_id berbentuk string
         const normalized = list.map((item) => ({
           ...item,
           user_id: String(item.user_id || item.id),
