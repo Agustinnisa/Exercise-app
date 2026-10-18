@@ -30,9 +30,6 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
-.env*
-
 # vercel
 .vercel
 
@@ -40,5 +37,17 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-.vercel
-.env*
+# Secret & Environment
+.env
+.env.*
+!.env.example
+.env.local
+backend/.env
+
+# Python
+backend/.venv/
+__pycache__/
+*.py[cod]
+
+# LOcal Vector DB Index
+backend/data/chroma/

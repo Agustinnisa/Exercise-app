@@ -3,6 +3,7 @@ import "./globals.css";
 import localFont from "next/font/local";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import ChatWidget from "@/components/ChatWidget";
 import { FavoriteProvider } from "@/context/FavoriteContext";
 import { UserProvider } from "@/context/UserContext";
 import { AuthProvider } from "@/context/AuthContext";
@@ -31,7 +32,9 @@ export const metadata = {
 
 export default async function RootLayout({ children }) {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   return (
     <html
@@ -39,7 +42,10 @@ export default async function RootLayout({ children }) {
       className={`${fontSans.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <body className="min-h-screen flex flex-col bg-background text-foreground" suppressHydrationWarning>
+      <body
+        className="min-h-screen flex flex-col bg-background text-foreground"
+        suppressHydrationWarning
+      >
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
@@ -51,11 +57,12 @@ export default async function RootLayout({ children }) {
               <FavoriteProvider>
                 <Navbar />
 
-                <main className="flex-1">
-                  {children}
-                </main>
+                <main className="flex-1">{children}</main>
 
                 <Footer />
+
+                {/* Widget Chatbot Floating */}
+                <ChatWidget />
               </FavoriteProvider>
             </UserProvider>
           </AuthProvider>
