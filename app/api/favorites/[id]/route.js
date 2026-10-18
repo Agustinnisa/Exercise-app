@@ -1,24 +1,37 @@
-import { removeFavorite, updateFavoriteNote } from "@/lib/services/favoriteServices";
+import { NextResponse } from "next/server";
+import {
+  removeFavorite,
+  updateFavoriteNote,
+} from "@/lib/services/favoriteServices";
 
-// DELETE: Hapus favorite berdasarkan ID
+// DELETE: Hapus favorite berdasarkan user_id (dikirim via params.id)
 export async function DELETE(request, { params }) {
   try {
     const resolvedParams = await params;
     const id = resolvedParams?.id;
 
     if (!id) {
-      return Response.json({ error: "ID tidak ditemukan" }, { status: 400 });
+      return NextResponse.json(
+        { error: "ID tidak ditemukan" },
+        { status: 400 }
+      );
     }
 
     const result = await removeFavorite(id);
 
     if (!result.success) {
-      return Response.json({ error: result.error }, { status: result.status || 500 });
+      return NextResponse.json(
+        { error: result.error },
+        { status: result.status || 500 }
+      );
     }
 
-    return Response.json({ message: result.message || "Berhasil dihapus" }, { status: 200 });
+    return NextResponse.json(
+      { message: result.message || "Berhasil dihapus" },
+      { status: 200 }
+    );
   } catch (error) {
-    return Response.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
 
@@ -28,21 +41,34 @@ export async function PATCH(request, { params }) {
     const resolvedParams = await params;
     const id = resolvedParams?.id;
 
+    if (!id) {
+      return NextResponse.json(
+        { error: "ID tidak ditemukan" },
+        { status: 400 }
+      );
+    }
+
     let body;
     try {
       body = await request.json();
-    } catch (error) {
-      return Response.json({ error: "Body harus berupa JSON valid" }, { status: 400 });
+    } catch {
+      return NextResponse.json(
+        { error: "Body harus berupa JSON valid" },
+        { status: 400 }
+      );
     }
 
     const result = await updateFavoriteNote(id, body.note);
 
     if (!result.success) {
-      return Response.json({ error: result.error }, { status: result.status || 500 });
+      return NextResponse.json(
+        { error: result.error },
+        { status: result.status || 500 }
+      );
     }
 
-    return Response.json(result.data, { status: 200 });
+    return NextResponse.json(result.data, { status: 200 });
   } catch (error) {
-    return Response.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

@@ -16,19 +16,18 @@ import {
 export default function UserCard({ user }) {
   const { addFavorite, removeFavorite, isFavorite } = useFavorite();
 
-  // Pengecekan status favorite menggunakan string ID
-  const favorited = isFavorite(user.id);
+  const targetId = String(user.id);
+  const favorited = isFavorite(targetId);
 
   const handleFavoriteClick = async () => {
-    const userPayload = {
-      ...user,
-      id: String(user.id),
-    };
-
     if (favorited) {
-      await removeFavorite(userPayload.id);
+      await removeFavorite(targetId);
     } else {
-      await addFavorite(userPayload);
+      await addFavorite({
+        ...user,
+        id: targetId,
+        user_id: targetId,
+      });
     }
   };
 
@@ -66,12 +65,16 @@ export default function UserCard({ user }) {
         {/* Company dengan ikon Building2 */}
         <div className="flex items-center gap-2 text-xs font-medium text-primary/80 truncate">
           <Building2 className="size-3.5 shrink-0 text-primary/70" />
-          <span className="truncate">{user.company?.name || "Company"}</span>
+          <span className="truncate">
+            {typeof user.company === "object"
+              ? user.company?.name || "Company"
+              : user.company || "Company"}
+          </span>
         </div>
 
         <div className="pt-3 flex items-center gap-2">
-          <Link 
-            href={`/users/${user.id}`} 
+          <Link
+            href={`/users/${user.id}`}
             className={cn(
               buttonVariants({ variant: "default" }),
               "flex-1 rounded-full bg-primary text-primary-foreground font-semibold shadow-sm transition-all hover:opacity-90 hover:shadow-md hover:shadow-primary/20"
@@ -85,7 +88,8 @@ export default function UserCard({ user }) {
             variant="outline"
             className={cn(
               "rounded-full font-semibold transition-all border-border/80 bg-background/50 hover:bg-accent hover:text-foreground",
-              favorited && "border-rose-500/30 bg-rose-500/10 hover:bg-rose-500/20"
+              favorited &&
+                "border-rose-500/30 bg-rose-500/10 hover:bg-rose-500/20"
             )}
           >
             <Heart

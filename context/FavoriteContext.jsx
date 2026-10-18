@@ -11,6 +11,7 @@ export function FavoriteProvider({ children }) {
 
   useEffect(() => {
     if (!isLoggedIn) {
+      setFavorites([]);
       return;
     }
 
@@ -20,15 +21,21 @@ export function FavoriteProvider({ children }) {
       .then((res) => res.json())
       .then((data) => {
         if (!isMounted) return;
-        if (Array.isArray(data)) {
-          setFavorites(data);
-        } else if (data && Array.isArray(data.data)) {
-          setFavorites(data.data);
-        } else if (data && Array.isArray(data.favorites)) {
-          setFavorites(data.favorites);
-        } else {
-          setFavorites([]);
-        }
+        const list = Array.isArray(data)
+          ? data
+          : Array.isArray(data?.data)
+          ? data.data
+          : Array.isArray(data?.favorites)
+          ? data.favorites
+          : [];
+
+        // Pastikan setiap item selalu memiliki properti user_id berbentuk string
+        const normalized = list.map((item) => ({
+          ...item,
+          user_id: String(item.user_id || item.id),
+        }));
+
+        setFavorites(normalized);
       })
       .catch((err) => {
         if (!isMounted) return;
@@ -41,8 +48,14 @@ export function FavoriteProvider({ children }) {
     };
   }, [isLoggedIn]);
 
-  // Jika tidak login, pastikan favorites selalu kosong tanpa memicu setFavorites di dalam effect
   const activeFavorites = isLoggedIn ? favorites : [];
+
+  // PENTING: Hanya bandingkan f.user_id dengan userId agar tidak tertukar dengan ID tabel favorit
+  function isFavorite(userId) {
+    if (!Array.isArray(activeFavorites)) return false;
+    const targetId = String(userId);
+    return activeFavorites.some((f) => String(f.user_id) === targetId);
+  }
 
   async function addFavorite(user) {
     if (!isLoggedIn) {
@@ -50,15 +63,21 @@ export function FavoriteProvider({ children }) {
       return;
     }
 
-    if (isFavorite(user.id)) return;
+    const userIdStr = String(user.id || user.user_id);
+
+    if (isFavorite(userIdStr)) return;
 
     const formattedUser = {
-      user_id: String(user.id),
+      user_id: userIdStr,
       name: user.name || "",
       email: user.email || "",
-      company: typeof user.company === "object" ? user.company?.name || "" : user.company || ""
+      company:
+        typeof user.company === "object"
+          ? user.company?.name || ""
+          : user.company || "",
     };
 
+    // Optimistic Update UI
     setFavorites((prev) => [...prev, formattedUser]);
 
     try {
@@ -69,19 +88,27 @@ export function FavoriteProvider({ children }) {
       });
 
       if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        console.error("Gagal simpan favorite di server:", errorData);
+        // Rollback jika gagal
         setFavorites((prev) =>
-          prev.filter((f) => String(f.id ?? f.user_id) !== String(user.id))
+          prev.filter((f) => String(f.user_id) !== userIdStr)
         );
       } else {
         const saved = await res.json();
-        setFavorites((prev) => 
-          prev.map((f) => String(f.user_id) === String(user.id) ? (saved || formattedUser) : f)
+        const savedData = saved.data || saved || formattedUser;
+        setFavorites((prev) =>
+          prev.map((f) =>
+            String(f.user_id) === userIdStr
+              ? { ...savedData, user_id: userIdStr }
+              : f
+          )
         );
       }
     } catch (error) {
       console.error("Gagal menambah favorite:", error);
       setFavorites((prev) =>
-        prev.filter((f) => String(f.id ?? f.user_id) !== String(user.id))
+        prev.filter((f) => String(f.user_id) !== userIdStr)
       );
     }
   }
@@ -90,8 +117,9 @@ export function FavoriteProvider({ children }) {
     const stringId = String(userId);
     const previousFavorites = [...favorites];
 
+    // Optimistic Update UI
     setFavorites((prev) =>
-      prev.filter((f) => String(f.id ?? f.user_id) !== stringId)
+      prev.filter((f) => String(f.user_id) !== stringId)
     );
 
     try {
@@ -108,36 +136,10 @@ export function FavoriteProvider({ children }) {
     }
   }
 
-  async function updateFavoriteNote(userId, note) {
-    const stringId = String(userId);
-    const res = await fetch(`/api/favorites/${stringId}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ note }),
-    });
-
-    if (res.ok) {
-      const updated = await res.json();
-      setFavorites((prev) =>
-        prev.map((f) =>
-          String(f.id ?? f.user_id) === stringId ? updated : f
-        )
-      );
-    }
-  }
-
-  function isFavorite(userId) {
-    if (!Array.isArray(activeFavorites)) return false;
-    return activeFavorites.some(
-      (f) => String(f.id ?? f.user_id) === String(userId)
-    );
-  }
-
   const value = {
     favorites: activeFavorites,
     addFavorite,
     removeFavorite,
-    updateFavoriteNote,
     isFavorite,
   };
 

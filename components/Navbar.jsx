@@ -85,7 +85,7 @@ export default function Navbar() {
                   <button
                     type="submit"
                     className={cn(
-                      buttonVariants({ size: "sm", variant: "outline" }),
+                      buttonVariants({ size: "sm", variant: "default" }),
                       "rounded-full px-4"
                     )}
                   >
@@ -159,7 +159,7 @@ export default function Navbar() {
                   <button
                     type="submit"
                     className={cn(
-                      buttonVariants({ size: "default", variant: "outline" }),
+                      buttonVariants({ size: "default", variant: "default" }),
                       "w-full rounded-full font-semibold shadow-sm"
                     )}
                   >

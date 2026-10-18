@@ -44,19 +44,27 @@ export default function FavoritesPage() {
           ) : (
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {favorites.map((favorite) => {
-                // Mendukung struktur data relasi Supabase (app_users) maupun data fallback/flat
-                const userData = favorite.app_users
-                  ? {
-                      id: favorite.app_users.id,
-                      name: favorite.app_users.name,
-                      email: favorite.app_users.email,
-                      company: { name: favorite.app_users.company_name },
-                    }
-                  : favorite;
+                // Menyamakan ID target agar selalu tersedia baik dari app_users maupun objek flat
+                const targetId = String(
+                  favorite.app_users?.id || favorite.user_id || favorite.id
+                );
+
+                const userData = {
+                  id: targetId,
+                  user_id: targetId,
+                  name: favorite.app_users?.name || favorite.name || "",
+                  email: favorite.app_users?.email || favorite.email || "",
+                  company:
+                    favorite.app_users?.company_name ||
+                    (typeof favorite.company === "object"
+                      ? favorite.company?.name
+                      : favorite.company) ||
+                    "",
+                };
 
                 return (
                   <UserCard
-                    key={favorite.id || favorite.user_id}
+                    key={targetId}
                     user={userData}
                   />
                 );
