@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { CheckCircle2, Plus, Minus, RotateCcw, Trash2, Target } from "lucide-react";
+import Link from "next/link";
+import { CheckCircle2, Plus, Minus, RotateCcw, Trash2, Target, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -67,49 +68,61 @@ export default function CounterPage() {
       <div className="bg-grid bg-radial-fade absolute inset-0 -z-10" />
 
       <div className="mx-auto max-w-5xl px-6 py-20">
+        
+        {/* Back button */}
+        <div className="mb-6">
+          <Link
+            href="/services"
+            className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground transition hover:text-primary"
+          >
+            <ArrowLeft size={16} />
+            <span>Kembali ke Services</span>
+          </Link>
+        </div>
+
         {/* Header Section */}
         <div className="border-b border-border/40 pb-6">
-        <p className="text-sm font-semibold tracking-wide text-primary uppercase">
-          PRODUCTIVITY TRACKER
-        </p>
-        <h1 className="mt-2 text-4xl font-bold tracking-tight md:text-5xl">
-          Productivity Counter
-        </h1>
-        <p className="mt-4 text-muted-foreground">
-          Kelola berbagai target harianmu dengan tracker counter interaktif.
-        </p>
-
-        {/* Poin-Poin Berangka / Step Badges */}
-        <div className="mt-6 rounded-xl border border-border/50 bg-card/40 p-4 backdrop-blur-sm">
-          <p className="text-xs font-semibold uppercase tracking-wider text-primary mb-3">
-            Cara Pakai:
+          <p className="text-sm font-semibold tracking-wide text-primary uppercase">
+            PRODUCTIVITY TRACKER
           </p>
-          <ul className="space-y-2.5 text-sm text-muted-foreground">
-            <li className="flex items-center gap-3">
-              <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">
-                1
-              </span>
-              <span>Isi nama aktivitas dan target jumlah pada formulir di bawah.</span>
-            </li>
-            <li className="flex items-center gap-3">
-              <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">
-                2
-              </span>
-              <span>
-                Klik tombol <span className="font-semibold text-foreground">+ Buat</span> untuk menambahkan kartu counter baru.
-              </span>
-            </li>
-            <li className="flex items-center gap-3">
-              <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">
-                3
-              </span>
-              <span>
-                Gunakan tombol <span className="font-semibold text-foreground">(+)</span> atau <span className="font-semibold text-foreground">(-)</span> pada tiap kartu untuk mengubah nilai progres.
-              </span>
-            </li>
-          </ul>
+          <h1 className="mt-2 text-4xl font-bold tracking-tight md:text-5xl">
+            Productivity Counter
+          </h1>
+          <p className="mt-4 text-muted-foreground">
+            Kelola berbagai target harianmu dengan tracker counter interaktif.
+          </p>
+
+          {/* Poin-Poin Berangka / Step Badges */}
+          <div className="mt-6 rounded-xl border border-border/50 bg-card/40 p-4 backdrop-blur-sm">
+            <p className="text-xs font-semibold uppercase tracking-wider text-primary mb-3">
+              Cara Pakai:
+            </p>
+            <ul className="space-y-2.5 text-sm text-muted-foreground">
+              <li className="flex items-center gap-3">
+                <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">
+                  1
+                </span>
+                <span>Isi nama aktivitas dan target jumlah pada formulir di bawah.</span>
+              </li>
+              <li className="flex items-center gap-3">
+                <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">
+                  2
+                </span>
+                <span>
+                  Klik tombol <span className="font-semibold text-foreground">+ Buat</span> untuk menambahkan kartu counter baru.
+                </span>
+              </li>
+              <li className="flex items-center gap-3">
+                <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">
+                  3
+                </span>
+                <span>
+                  Gunakan tombol <span className="font-semibold text-foreground">(+)</span> atau <span className="font-semibold text-foreground">(-)</span> pada tiap kartu untuk mengubah nilai progres.
+                </span>
+              </li>
+            </ul>
+          </div>
         </div>
-      </div>
 
         {/* Form Tambah Counter */}
         <form onSubmit={handleAddCounter} className="mt-8 flex flex-wrap gap-3">

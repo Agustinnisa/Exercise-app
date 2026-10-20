@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Code2, LineChart, Palette, Calculator, ArrowRight } from "lucide-react";
+import { Code2, LineChart, Palette, Calculator, Scan, ArrowRight, Sparkles } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 const services = [
@@ -48,7 +48,6 @@ export default function ServicesPage() {
               key={title}
               className="group relative overflow-hidden border border-border/60 bg-card/60 backdrop-blur-md transition-all duration-300 hover:-translate-y-1.5 hover:border-primary/40 hover:shadow-xl hover:shadow-primary/10"
             >
-              {/* Mengurangi opacity menjadi /5 agar gradien lebih halus dan menyatu */}
               <div className="absolute top-0 right-0 h-24 w-24 rounded-bl-full bg-primary/5 transition-all group-hover:bg-primary/10" />
 
               <CardHeader className="relative p-6 pb-2">
@@ -74,39 +73,86 @@ export default function ServicesPage() {
           ))}
         </div>
 
-        {/* Card Tambahan: Interactive Playground / Lab ke /counter */}
-        <div className="mt-8">
-          <Card className="group relative overflow-hidden border border-primary/30 bg-primary/5 backdrop-blur-md transition-all duration-300 hover:border-primary/60 hover:shadow-xl hover:shadow-primary/10">
-            {/* Elemen Gradien Lingkaran Khas */}
-            <div className="absolute -top-12 left-1/2 -z-10 h-32 w-64 -translate-x-1/2 rounded-full bg-primary/10 blur-2xl" />
+        {/* Header Bagian Interactive Tools & AI Labs */}
+        <div className="mt-16 mb-8 flex items-center gap-3">
+          <div className="flex size-9 items-center justify-center rounded-xl bg-primary/10 text-primary shadow-sm">
+            <Sparkles className="size-5" />
+          </div>
+          <div>
+            <h2 className="text-2xl font-bold tracking-tight">Interactive Tools & AI Labs</h2>
+            <p className="text-sm text-muted-foreground">Eksperimen fitur interaktif dan teknologi AI terbaru dari kami.</p>
+          </div>
+        </div>
 
-            <CardHeader className="p-8 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
-              <div className="flex items-start gap-5">
-                <div className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-md">
+        {/* Grid 2 Kolom untuk Kartu Lab */}
+        <div className="grid gap-6 md:grid-cols-2">
+          
+          {/* Card 1: Counter Playground */}
+          <Card className="group relative flex flex-col justify-between overflow-hidden border border-primary/20 bg-card/60 backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:border-primary/50 hover:shadow-xl hover:shadow-primary/10 p-6 sm:p-8">
+            <div className="absolute -top-12 -right-12 -z-10 h-32 w-32 rounded-full bg-primary/10 blur-2xl transition-all group-hover:bg-primary/20" />
+
+            <div>
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex size-12 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-md transition-transform group-hover:scale-105">
                   <Calculator className="size-6" />
                 </div>
-                <div>
-                  <span className="text-xs font-semibold tracking-wider text-primary uppercase">
-                    Interactive Lab
-                  </span>
-                  <CardTitle className="mt-1 text-2xl font-bold">
-                    Counter Playground
-                  </CardTitle>
-                  <CardDescription className="mt-1 text-sm text-muted-foreground">
-                    Try our interactive state management counter tool built with React hooks.
-                  </CardDescription>
-                </div>
+                <span className="text-xs font-semibold tracking-wider text-primary uppercase bg-primary/10 px-3 py-1 rounded-full">
+                  Interactive Lab
+                </span>
               </div>
 
+              <CardTitle className="text-2xl font-bold">
+                Counter Playground
+              </CardTitle>
+              <CardDescription className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                Uji coba alat penghitung interaktif berbasis manajemen state React hooks yang responsif.
+              </CardDescription>
+            </div>
+
+            <div className="mt-8 pt-4 border-t border-border/40">
               <Link
                 href="/counter"
-                className="mt-6 sm:mt-0 inline-flex items-center gap-2 rounded-full bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground shadow-md transition-all hover:opacity-90 hover:shadow-lg active:scale-95"
+                className="inline-flex w-fit items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-md transition-all hover:opacity-90 hover:shadow-lg active:scale-95"
               >
                 <span>Try Counter Tool</span>
                 <ArrowRight className="size-4" />
               </Link>
-            </CardHeader>
+            </div>
           </Card>
+
+          {/* Card 2: Waste Object Detector (AI Computer Vision) */}
+          <Card className="group relative flex flex-col justify-between overflow-hidden border border-primary/20 bg-card/60 backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:border-primary/50 hover:shadow-xl hover:shadow-primary/10 p-6 sm:p-8">
+            <div className="absolute -top-12 -right-12 -z-10 h-32 w-32 rounded-full bg-primary/10 blur-2xl transition-all group-hover:bg-primary/20" />
+
+            <div>
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex size-12 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-md transition-transform group-hover:scale-105">
+                  <Scan className="size-6" />
+                </div>
+                <span className="text-xs font-semibold tracking-wider text-primary uppercase bg-primary/10 px-3 py-1 rounded-full">
+                  AI Computer Vision
+                </span>
+              </div>
+
+              <CardTitle className="text-2xl font-bold">
+                Waste Object Detector
+              </CardTitle>
+              <CardDescription className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                Deteksi dan klasifikasi jenis sampah secara otomatis menggunakan algoritma YOLO dan Computer Vision.
+              </CardDescription>
+            </div>
+
+            <div className="mt-8 pt-4 border-t border-border/40">
+              <Link
+                href="/vision"
+                className="inline-flex w-fit items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-md transition-all hover:opacity-90 hover:shadow-lg active:scale-95"
+              >
+                <span>Try Waste Detector</span>
+                <ArrowRight className="size-4" />
+              </Link>
+            </div>
+          </Card>
+
         </div>
       </div>
     </section>
