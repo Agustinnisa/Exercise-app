@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Code2, LineChart, Palette, Calculator, Scan, ArrowRight, Sparkles } from "lucide-react";
+import { Code2, LineChart, Palette, Calculator, Scan, Sparkles, ArrowRight, Lightbulb } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 const services = [
@@ -84,7 +84,7 @@ export default function ServicesPage() {
           </div>
         </div>
 
-        {/* Grid 2 Kolom untuk Kartu Lab */}
+        {/* Grid Card Lab dengan Ukuran Sama Persis */}
         <div className="grid gap-6 md:grid-cols-2">
           
           {/* Card 1: Counter Playground */}
@@ -120,7 +120,7 @@ export default function ServicesPage() {
             </div>
           </Card>
 
-          {/* Card 2: Waste Object Detector (AI Computer Vision) */}
+          {/* Card 2: Waste Object Detector */}
           <Card className="group relative flex flex-col justify-between overflow-hidden border border-primary/20 bg-card/60 backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:border-primary/50 hover:shadow-xl hover:shadow-primary/10 p-6 sm:p-8">
             <div className="absolute -top-12 -right-12 -z-10 h-32 w-32 rounded-full bg-primary/10 blur-2xl transition-all group-hover:bg-primary/20" />
 
@@ -148,6 +148,39 @@ export default function ServicesPage() {
                 className="inline-flex w-fit items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-md transition-all hover:opacity-90 hover:shadow-lg active:scale-95"
               >
                 <span>Try Waste Detector</span>
+                <ArrowRight className="size-4" />
+              </Link>
+            </div>
+          </Card>
+
+          {/* Card 3: Activity Recommender (Ditaruh di bawah, ukuran sama persis dan berada di sisi kiri grid 2 kolom) */}
+          <Card className="group relative flex flex-col justify-between overflow-hidden border border-primary/20 bg-card/60 backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:border-primary/50 hover:shadow-xl hover:shadow-primary/10 p-6 sm:p-8">
+            <div className="absolute -top-12 -right-12 -z-10 h-32 w-32 rounded-full bg-primary/10 blur-2xl transition-all group-hover:bg-primary/20" />
+
+            <div>
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex size-12 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-md transition-transform group-hover:scale-105">
+                  <Lightbulb className="size-6" />
+                </div>
+                <span className="text-xs font-semibold tracking-wider text-primary uppercase bg-primary/10 px-3 py-1 rounded-full">
+                  AI Recommendation
+                </span>
+              </div>
+
+              <CardTitle className="text-2xl font-bold">
+                Activity Recommender
+              </CardTitle>
+              <CardDescription className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                Sistem rekomendasi personal berbasis aturan & kecocokan profil untuk aktivitas harianmu.
+              </CardDescription>
+            </div>
+
+            <div className="mt-8 pt-4 border-t border-border/40">
+              <Link
+                href="/recommendations"
+                className="inline-flex w-fit items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-md transition-all hover:opacity-90 hover:shadow-lg active:scale-95"
+              >
+                <span>Try Recommender</span>
                 <ArrowRight className="size-4" />
               </Link>
             </div>
